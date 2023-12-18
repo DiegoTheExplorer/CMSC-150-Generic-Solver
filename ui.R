@@ -8,20 +8,25 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                            sidebarPanel(
                              tags$h3("Input:"),
                              numericInput("polyOrder", "Enter the order of the polynomial:", ""),    #Polynomial function order input
-                             fileInput("polyFile", "Select a file"),                         #csv file selection
+                             numericInput("polyX", "Enter the value of x to be estimated:", ""),     #x value to be estimated
+                             fileInput("polyFile", "Select a file", accept = ".csv"),                #csv file selection
+                             actionButton("polyBtn", "Estimate x"),
                              
                            ), # sidebarPanel
                            mainPanel(
                              h1("Ouput"),
                              
                              h4("Generated function (f(x)):"),
-                             h4("Estimated value of f(x):"),
+                             verbatimTextOutput("polyFunction"),      #Output for the Polynomial Regression Function
                              
+                             h4("Estimated value of f(x):"),
+                             verbatimTextOutput("polyEstimate"),     #Output for the estimated value of x
+                             verbatimTextOutput("errorMsg"),
                            ) # mainPanel
                            
                   ), # Polynomial Regression Tab Panel
-                  tabPanel("Navbar 2", "This panel is intentionally left blank"),
-                  tabPanel("Navbar 3", "This panel is intentionally left blank")
+                  tabPanel("Quadratic Spline Interpolation"),
+                  tabPanel("Simplex Diet Calculator")
                   
                 ) # navbarPage
 ) # fluidPage     

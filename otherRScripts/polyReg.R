@@ -1,6 +1,3 @@
-a <- c(20,20,25,27,30,30,33,35,35,40)
-b <- c(8.75,9.43,12.87,14.24,16.89,18.94,25.48,30.11,36.07,51.27)
-
 partialPivot <- function(acm, pivot, curr)
 {
   
@@ -104,7 +101,3 @@ PolynomialRegression <- function(n, varVecs){
   
   return(list(augcoeffmatrix=acm, coefficients=coeffs, polynomial_string=funcString, polynomial_function=func))
 }
-
-print(PolynomialRegression(1, list(a,b)))
-print(PolynomialRegression(2, list(a,b)))
-print(PolynomialRegression(3, list(a,b)))
