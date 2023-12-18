@@ -1,4 +1,6 @@
-# Define server function  
+#Author: Diego Miguel M. Villamil
+#Description: This is the backend part of the Rshiny app
+
 server <- function(input, output) {
   
   output$txtout <- renderText({

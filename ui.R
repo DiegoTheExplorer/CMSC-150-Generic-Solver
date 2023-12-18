@@ -1,20 +1,21 @@
-# Define UI
-ui <- fluidPage(theme = shinytheme("cerulean"),
+#Author: Diego Miguel M. Villamil
+#Description: This file is for the UI elements of the Rshiny app
+
+ui <- fluidPage(theme = shinytheme("superhero"),
                 navbarPage(
-                  # theme = "cerulean",  # <--- To use a theme, uncomment this
-                  "My first app",
+                  "CMSC 150 Generic Solver",
                   tabPanel("Polynomial Regression",
                            sidebarPanel(
                              tags$h3("Input:"),
-                             textInput("txt1", "Given Name:", ""),
-                             textInput("txt2", "Surname:", ""),
+                             textInput("txt1", "Enter the order of the polynomial:", ""),    #
+                             fileInput("filePoly", "Select a file"),
                              
                            ), # sidebarPanel
                            mainPanel(
-                             h1("Header 1"),
+                             h1("Ouput"),
                              
-                             h4("Output 1"),
-                             verbatimTextOutput("txtout"),
+                             h4("Generated function (f(x)):"),
+                             h4("Estimated value of f(x):"),
                              
                            ) # mainPanel
                            
