@@ -7,8 +7,8 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                   tabPanel("Polynomial Regression",
                            sidebarPanel(
                              tags$h3("Input:"),
-                             textInput("txt1", "Enter the order of the polynomial:", ""),    #
-                             fileInput("filePoly", "Select a file"),
+                             numericInput("polyOrder", "Enter the order of the polynomial:", ""),    #Polynomial function order input
+                             fileInput("polyFile", "Select a file"),                         #csv file selection
                              
                            ), # sidebarPanel
                            mainPanel(
@@ -19,9 +19,9 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              
                            ) # mainPanel
                            
-                  ), # Navbar 1, tabPanel
+                  ), # Polynomial Regression Tab Panel
                   tabPanel("Navbar 2", "This panel is intentionally left blank"),
                   tabPanel("Navbar 3", "This panel is intentionally left blank")
                   
                 ) # navbarPage
-) # fluidPage
+) # fluidPage     

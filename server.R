@@ -1,9 +1,8 @@
 #Author: Diego Miguel M. Villamil
-#Description: This is the backend part of the Rshiny app
+#Description: This is the back end part of the Rshiny app
+
+source('otherRScripts/polyReg.R')
 
 server <- function(input, output) {
   
-  output$txtout <- renderText({
-    paste( input$txt1, input$txt2, sep = " " )
-  })
 } # server
