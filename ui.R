@@ -25,7 +25,15 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                            ) # mainPanel
                            
                   ), # Polynomial Regression Tab Panel
-                  tabPanel("Quadratic Spline Interpolation"),
+                  tabPanel("Quadratic Spline Interpolation",
+                           sidebarPanel(
+                             tags$h3("Input:"),
+                             numericInput("quadX", "Enter the value of x to be estimated:", ""),     #x value to be estimated
+                             fileInput("quadFile", "Select a file", accept = ".csv"),                #csv file selection
+                             actionButton("quadBtn", "Estimate x"),
+                             
+                           ), 
+                  ), # Quadratic Spline Interpolation Tab Panel
                   tabPanel("Simplex Diet Calculator")
                   
                 ) # navbarPage

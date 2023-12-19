@@ -41,6 +41,7 @@ server <- function(input, output) {
   
   #End of Polynomial Regression handling
   
-  
+  #Start of Quadratic Spline Interpolation Handling
+  #End of Quadratic Spline Interpolation Handling
   
 } # server
