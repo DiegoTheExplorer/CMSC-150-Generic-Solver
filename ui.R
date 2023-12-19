@@ -32,7 +32,17 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              fileInput("quadFile", "Select a file", accept = ".csv"),                #csv file selection
                              actionButton("quadBtn", "Estimate x"),
                              
-                           ), 
+                           ), # sidebarPanel
+                           mainPanel(
+                             h1("Ouput"),
+                             
+                             h4("Generated functions (f(x)):"),
+                             verbatimTextOutput("console1"),                    #Output for the interpolating functions
+                             
+                             h4("Estimated value of f(x):"),
+                             verbatimTextOutput("quadEstimate"),     #Output for the estimated value of x
+                             verbatimTextOutput("errorMsg2"),
+                           ) # mainPanel
                   ), # Quadratic Spline Interpolation Tab Panel
                   tabPanel("Simplex Diet Calculator")
                   

@@ -2,6 +2,7 @@
 #Description: This is the back end part of the Rshiny app
 
 source('otherRScripts/polyReg.R')
+source('otherRScripts/quadSpline.R')
 
 server <- function(input, output) {
   
@@ -42,6 +43,22 @@ server <- function(input, output) {
   #End of Polynomial Regression handling
   
   #Start of Quadratic Spline Interpolation Handling
+  observeEvent(input$quadBtn, {
+    req(input$quadFile,input$quadX,cancelOutput = TRUE)    #Check if all input fields have inputs
+    
+    data <- read.csv(input$quadFile$datapath, header = FALSE)
+    numDataPoints <- nrow(data)
+    quadOutput <- QuadraticSplineInterpolation(input$quadX,c(data["V1"],data["V2"]))
+    
+    output$console1 <- renderPrint({
+      print(quadOutput)
+    })
+    
+    output$quadEstimate <- renderText({
+      paste(as.character(quadOutput$estimate))
+    }) #Estimate output
+    
+  }) #quadBtn Observer
   #End of Quadratic Spline Interpolation Handling
   
 } # server

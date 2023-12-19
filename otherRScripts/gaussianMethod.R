@@ -10,7 +10,6 @@ partialPivot <- function(acm, pivot, curr)
 
 GaussianMethod <- function(vars, acm)
 {
-  browser()
   numUnknowns = length(vars)
   solution = c(1:numUnknowns)
 

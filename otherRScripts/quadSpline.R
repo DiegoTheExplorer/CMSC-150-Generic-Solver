@@ -1,6 +1,7 @@
 source('otherRScripts/acm.R')
 source('otherRScripts/gaussianMethod.R')
 
+genericQuadratic <- function(x,a,b,c) a * x ^ 2 + b * x + c
 
 QuadraticSplineInterpolation <- function(x,varVecs){
   
@@ -110,8 +111,6 @@ QuadraticSplineInterpolation <- function(x,varVecs){
     at2 <- paste(as.character(xvals[i] * -2),tempabc2[1], sep = " * ")
     bt1 <- paste(1,tempabc1[2], sep = " * ")                               
     bt2 <- paste("-1",tempabc2[2], sep = " * ")
-    print(bt1)
-    print(bt2)
     
     terms1 <- paste(at1,bt1,at2,bt2, sep = " + ")
     terms1 <- sub("[0-9]+ \\* a1 \\+ ","", terms1)
@@ -120,40 +119,70 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   }
   
   for (i in 1:(length(functionStrings))){ 
-    print(functionStrings[i])
+    #print(functionStrings[i])
     #print(system[i])
   }
-  print("******************************************")
   
-  for (i in 1:(numunk - 1)){
+  for (i in 1:(numunk - 1)){                                #substitute abc variables for xn
     for (j in 1:(numunk - 1))
-      functionStrings[i] <- gsub(abcVars[j],xVars[j],functionStrings[i])
+      functionStrings[i] <- gsub(abcVars[j],xVars[j],functionStrings[i])        
   }
   
-  for (i in 1:(length(functionStrings))){ 
+  for (i in 1:(length(functionStrings))){                   #parse text to r expressions
     #print(functionStrings[i])
     system[i] <- parse(text = functionStrings[i])
     #print(system[i])
   }
   
-  acm <- AugCoeffMatrix(system)
-  solution <- GaussianMethod(xVars,acm$augcoeffmatrix)
+  acm <- AugCoeffMatrix(system)                             #convert to augemented coefficient matrix
+  gauss <- GaussianMethod(xVars,acm$augcoeffmatrix)         #solve acm through gaussian
+  
+  #Initializing the final quadratic equations
+  funcStringTemplate <- "function(x) a * x ^ 2 + b * x + c"
+  outputFuncStrings <- list()
+  
+  finalCoeffs <- list(1:(numintv))
+  temp <- append(gauss$solution,0,0)
+  for (i in 1:numintv){
+    finalCoeffs[[i]] <- c(1:3)                              #stores the final coefficients in this format:                               
+    for (j in 1:3){                                         #((a1,b1,c1),(a2,b2,c2),...,(an,bn,cn)) 
+      if (i == 1 && j == 1)
+        finalCoeffs[[i]][j] <- 0
+      else{
+        finalCoeffs[[i]][j] <- temp[((i - 1) * 3) + j]
+      }
+    }
+  }
+  
+  for (i in 1:numintv){
+    temp <- funcStringTemplate                              #make string versions of the functions for each interval
+    for (j in 1:3){
+      subChar <- paste(" ",abc[j], sep = "")
+      temp <- sub(subChar,as.character(finalCoeffs[[i]][j]),temp)
+    }
+    outputFuncStrings <- append(outputFuncStrings,temp)
+  }
+  
+  rangeLabels <- c(1:numintv)
+  for (i in 1:numintv){
+    temp <- paste(xvals[i],"< x <",xvals[i + 1])
+    rangeLabels[i] <- temp
+  }
+  setNames(outputFuncStrings,rangeLabels)
+  
+  targetInt = 1
+  for (i in 1:numintv){                                     
+    if (x > xvals[i])                                       #Choose the correct interval to use
+      targetInt <- targetInt + 1
+    else{
+      targetInt <- targetInt - 1
+      break
+    }
+  }
+
+  estimate <- genericQuadratic(x,finalCoeffs[[targetInt]][1],finalCoeffs[[targetInt]][2],finalCoeffs[[targetInt]][3])
+  returnList <- list(interpolating_functions = outputFuncStrings, estimate = estimate, xvals = xvals, yvals = yvals)
+  
+  return(returnList)
+  
 } #Quadratic Spline Interpolation
-
-x1 <- c(2,5,7)
-y1 <- c(1,8,3)
-inp1 <- list(x1,y1)
-
-x2 <- c(1,2.5,8.75,11.25)
-y2 <- c(2,9,23,25.9)
-inp2 <- list(x2,y2)
-
-x3 <- c(3,4.5,7,9)
-y3 <- c(2.5,1,2.5,0.5)
-inp3 <- list(x3,y3)
-
-#QuadraticSplineInterpolation(3,inp1)
-#QuadraticSplineInterpolation(6,inp1)
-#QuadraticSplineInterpolation(7,inp2)
-QuadraticSplineInterpolation(6,inp3)
-
