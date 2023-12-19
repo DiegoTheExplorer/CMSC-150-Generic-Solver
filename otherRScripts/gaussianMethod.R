@@ -12,7 +12,7 @@ GaussianMethod <- function(vars, acm)
 {
   numUnknowns = length(vars)
   solution = c(1:numUnknowns)
-  
+
   #Forward elmination
   for (i in 1:(numUnknowns - 1))
   {

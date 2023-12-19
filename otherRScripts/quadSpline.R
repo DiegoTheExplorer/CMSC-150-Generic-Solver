@@ -13,67 +13,121 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   
   funcFormABC <- ("(")              #function formal parameters that use an bn cn
   funcFormX <- ("(")                #function formal parameters that use x1, x2, x3,...,xn
+  abcVars <- c()
+  xVars <- c()
   abc <- c("a","b","c")
-  functionStrings <- list()
+  functionStrings <- c()
+  system <- list()
   
   for (i in 1:numintv){             #creates a string of formal parameters in the pattern (an,bn,cn,an+1,bn+1,cn+1,...) 
     for (j in 1:3){ 
       if (!(abc[j] == "a" && i == 1)){
-        funcFormABC <- paste(funcFormABC,paste(abc[j],as.character(i),sep=""),sep="")
+        var <- paste(abc[j],as.character(i),sep="")
+        funcFormABC <- paste(funcFormABC,var,sep="")
+        abcVars <- append(abcVars,var)
         if (!(i == numintv && j == 3))
-          funcFormABC <- paste(funcFormABC,",",sep="")
+          funcFormABC <- paste(funcFormABC,", ",sep="")
         else
           funcFormABC <- paste(funcFormABC,")",sep="")
       }
     }
   }
-  
+
   for (i in 1:(numunk - 1)){        #creates a string of formal parameters in the pattern (x1,x2,x3,x4,...,xn) 
-    funcFormX <- paste(funcFormX,paste("x",i,sep = ""),sep = "")
+    var <- paste("x",i,sep = "")
+    funcFormX <- paste(funcFormX,var,sep = "")
+    xVars <- append(xVars,var)
     if(i != (numunk - 1))
-      funcFormX <- paste(funcFormX,",", sep = "")
+      funcFormX <- paste(funcFormX,", ", sep = "")
     else
       funcFormX <- paste(funcFormX,")", sep = "")
   }
-  
-  for (i in 2:numintv){             #creates function strings for condition 1
+
+  for (i in 1:numintv){                                                             #Function creation for conditions 1 and 2
     func1 <- paste("function",funcFormABC,sep = "")
     func2 <- paste("function",funcFormABC,sep = "")
     tempabc1 <- abc
     tempabc2 <- abc
     
-    for (j in 1:3){
+    if (i == 1){
+      for (j in 1:3){                                                               #creates function strings for condition 2
+        tempabc1[j] <- paste(tempabc1[j],as.character(1),sep = "")
+        tempabc2[j] <- paste(tempabc2[j],as.character(numintv),sep = "")
+      }
+      
+      at1 <- paste(as.character(xvals[1] ^ 2),tempabc1[1], sep = " * ")                 #x0 ^ 2 * a1
+      at2 <- paste(as.character(xvals[numdp] ^ 2),tempabc2[1], sep = " * ")             #xn ^ 2 * an
+      bt1 <- paste(xvals[1],tempabc1[2], sep = " * ")                                   #x0 * b1
+      bt2 <- paste(xvals[numdp],tempabc2[2], sep = " * ")                               #xn * bn
+      
+      terms1 <- paste(at1,bt1,tempabc1[3],as.character(yvals[1] * -1), sep = " + ")     #x0 ^ 2 * a1 + x0 * b1 + cn - f(x0)
+      terms2 <- paste(at2,bt2,tempabc2[3],as.character(yvals[numdp] * -1), sep = " + ") #xn ^ 2 * an + xn * bn + cn - f(xn)
+      
+      terms1 <- sub("[0-9]+ \\* a1 \\+ ","", terms1)
+      func1 <- paste(func1,terms1)
+      func2 <- paste(func2,terms2)
+      
+      functionStrings <- append(functionStrings,func1,length(functionStrings))
+      functionStrings <- append(functionStrings,func2,length(functionStrings))                      
+    }else{  
+      for (j in 1:3){                                                               #creates function strings for condition 1
+        tempabc1[j] <- paste(tempabc1[j],as.character(i-1),sep = "")
+        tempabc2[j] <- paste(tempabc2[j],as.character(i),sep = "")
+      }
+      
+      at1 <- paste(as.character(xvals[i] ^ 2),tempabc1[1], sep = " * ")             #xi-1 ^ 2 * an
+      at2 <- paste(as.character(xvals[i] ^ 2),tempabc2[1], sep = " * ")
+      bt1 <- paste(xvals[i],tempabc1[2], sep = " * ")                               #xi-1 * bn
+      bt2 <- paste(xvals[i],tempabc2[2], sep = " * ")
+      
+      terms1 <- paste(at1,bt1,tempabc1[3],as.character(yvals[i] * -1), sep = " + ") #xi-1 ^ 2 * an + xi-1 * bn + cn - f(xi-1)
+      terms2 <- paste(at2,bt2,tempabc2[3],as.character(yvals[i] * -1), sep = " + ")
+      
+      terms1 <- sub("[0-9].+ \\* a1 \\+ ","", terms1)
+      func1 <- paste(func1,terms1)
+      func2 <- paste(func2,terms2)
+      
+      functionStrings <- append(functionStrings,func1,length(functionStrings) - 2)
+      functionStrings <- append(functionStrings,func2,length(functionStrings) - 2)
+      
+    }
+  } #Function creation for conditions 1 and 2
+  
+  for (i in 2:numintv){                                                             #Function creation for condition 3
+    func1 <- paste("function",funcFormABC,sep = "")
+    tempabc1 <- abc
+    tempabc2 <- abc
+    for (j in 1:3){                                                            
       tempabc1[j] <- paste(tempabc1[j],as.character(i-1),sep = "")
       tempabc2[j] <- paste(tempabc2[j],as.character(i),sep = "")
     }
     
-    at1 <- paste(as.character(xvals[i] ^ 2),tempabc1[1], sep = " * ")
-    at2 <- paste(as.character(xvals[i] ^ 2),tempabc2[1], sep = " * ")
-    bt1 <- paste(xvals[i],tempabc1[2], sep = " * ")
-    bt2 <- paste(xvals[i],tempabc1[2], sep = " * ")
+    at1 <- paste(as.character(xvals[i] * 2),tempabc1[1], sep = " * ")             
+    at2 <- paste(as.character(xvals[i] * -2),tempabc2[1], sep = " * ")
+    bt1 <- paste(tempabc1[2], sep = " * ")                               
+    bt2 <- paste(paste("-",tempabc2[2], sep = ""), sep = " * ")
     
-    # func1 <- paste(func1, at1)                                          #function() xi-1 * a
-    # func2 <- paste(func2, at2)
-    # func1 <- paste(func1, bt1, sep = " + ")                             #function() xi-1 ^ 2 * a + xi-1 * b
-    # func2 <- paste(func2, bt2, sep = " + ")
-    # func1 <- paste(func1, tempabc1[3], sep = " + ")                     #function() xi-1 ^ 2 * a + xi-1 * b + c
-    # func2 <- paste(func2, tempabc2[3], sep = " + ")
-    # func1 <- paste(func1, as.character(yvals[i] * -1), sep = " + ")     #function() xi-1 ^ 2 * a + xi-1 * b + c
-    # func2 <- paste(func2, as.character(yvals[i] * -1), sep = " + ")
-    
-    terms1 <- paste(at1,bt1,tempabc1[3],as.character(yvals[i] * -1), sep = " + ")
-    terms2 <- paste(at2,bt2,tempabc2[3],as.character(yvals[i] * -1), sep = " + ")
-    
+    terms1 <- paste(at1,bt1,at2,bt2, sep = " + ")
+    terms1 <- sub("[0-9]+ \\* a1 \\+ ","", terms1)
     func1 <- paste(func1,terms1)
-    func2 <- paste(func2,terms2)
-    
-    functionStrings <- append(functionStrings,func1,0)
-    functionStrings <- append(functionStrings,func2,0)
-    
-    temp1 <- paste()
+    functionStrings <- append(functionStrings,func1,length(functionStrings))
   }
-  print(functionStrings)
   
+  for (i in 1:(numunk - 1)){
+    for (j in 1:(numunk - 1))
+      functionStrings[i] <- gsub(abcVars[j],xVars[j],functionStrings[i])
+  }
+  
+  for (i in 1:(length(functionStrings))){ 
+    print(functionStrings[i])
+    system[i] <- parse(text = functionStrings[i])
+    #print(system[i])
+  }
+  
+  acm <- AugCoeffMatrix(system)
+  print(acm)
+  solution <- GaussianMethod(xVars,acm)
+  print(solution)
 } #Quadratic Spline Interpolation
 
 x1 <- c(2,5,7)

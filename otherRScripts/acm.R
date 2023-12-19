@@ -9,12 +9,14 @@ AugCoeffMatrix <- function(sys){
   deparsedSys <- lapply(sys,deparse,width.cutoff = 500)
   numEq <- length(deparsedSys)
   unknowns <- ""
-  
+
   #Separating the unknowns into their own list
   for (i in 1:numEq){
+    print(deparsedSys[[i]][[1]])
     currLen = nchar(deparsedSys[[i]][[1]])
     #check if number of unknowns is not even to the previous
     if(i > 1){
+      browser()
       if(unknownsLen != currLen){
         print("Number of unknowns was not equal")
         return(NA)
@@ -32,7 +34,7 @@ AugCoeffMatrix <- function(sys){
   }
   
   #Initialize the N:1 matrix for the Right Hand Side of each equation
-  RHS <- matrix(data=NA, nrow=numEq, ncol = 1)
+  RHS <- matrix(data=0, nrow=numEq, ncol = 1)
   colnames(RHS) <- c("RHS")
   numUnknowns <- length(unknowns[[1]])
   
@@ -45,7 +47,9 @@ AugCoeffMatrix <- function(sys){
       
     }
     temp <- strsplit(deparsedSys[[i]][[2]], " \\+ ")
-    for(j in 1:(numUnknowns + 1)){
+    len <- length(temp[[1]])
+    #browser()
+    for(j in 1:(length(temp[[1]]))){
       #Check if current the term is not a constant
       print(temp[[1]][[j]])
       print(grepl("\\*", temp[[1]][[j]]))
