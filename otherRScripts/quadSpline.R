@@ -44,8 +44,8 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   }
 
   for (i in 1:numintv){                                                             #Function creation for conditions 1 and 2
-    func1 <- paste("function",funcFormABC,sep = "")
-    func2 <- paste("function",funcFormABC,sep = "")
+    func1 <- paste("function",funcFormABC,sep = " ")
+    func2 <- paste("function",funcFormABC,sep = " ")
     tempabc1 <- abc
     tempabc2 <- abc
     
@@ -59,13 +59,15 @@ QuadraticSplineInterpolation <- function(x,varVecs){
       at2 <- paste(as.character(xvals[numdp] ^ 2),tempabc2[1], sep = " * ")             #xn ^ 2 * an
       bt1 <- paste(xvals[1],tempabc1[2], sep = " * ")                                   #x0 * b1
       bt2 <- paste(xvals[numdp],tempabc2[2], sep = " * ")                               #xn * bn
+      ct1 <- paste(1,tempabc1[3],sep = " * ")
+      ct2 <- paste(1,tempabc2[3],sep = " * ")
       
-      terms1 <- paste(at1,bt1,tempabc1[3],as.character(yvals[1] * -1), sep = " + ")     #x0 ^ 2 * a1 + x0 * b1 + cn - f(x0)
-      terms2 <- paste(at2,bt2,tempabc2[3],as.character(yvals[numdp] * -1), sep = " + ") #xn ^ 2 * an + xn * bn + cn - f(xn)
+      terms1 <- paste(at1,bt1,ct1,as.character(yvals[1] * -1), sep = " + ")     #x0 ^ 2 * a1 + x0 * b1 + cn - f(x0)
+      terms2 <- paste(at2,bt2,ct2,as.character(yvals[numdp] * -1), sep = " + ") #xn ^ 2 * an + xn * bn + cn - f(xn)
       
       terms1 <- sub("[0-9]+ \\* a1 \\+ ","", terms1)
-      func1 <- paste(func1,terms1)
-      func2 <- paste(func2,terms2)
+      func1 <- paste(func1,terms1, sep = " ")
+      func2 <- paste(func2,terms2, sep = " ")
       
       functionStrings <- append(functionStrings,func1,length(functionStrings))
       functionStrings <- append(functionStrings,func2,length(functionStrings))                      
@@ -79,13 +81,15 @@ QuadraticSplineInterpolation <- function(x,varVecs){
       at2 <- paste(as.character(xvals[i] ^ 2),tempabc2[1], sep = " * ")
       bt1 <- paste(xvals[i],tempabc1[2], sep = " * ")                               #xi-1 * bn
       bt2 <- paste(xvals[i],tempabc2[2], sep = " * ")
+      ct1 <- paste(1,tempabc1[3],sep = " * ")                                       #1 * cn
+      ct2 <- paste(1,tempabc2[3],sep = " * ")
       
-      terms1 <- paste(at1,bt1,tempabc1[3],as.character(yvals[i] * -1), sep = " + ") #xi-1 ^ 2 * an + xi-1 * bn + cn - f(xi-1)
-      terms2 <- paste(at2,bt2,tempabc2[3],as.character(yvals[i] * -1), sep = " + ")
+      terms1 <- paste(at1,bt1,ct1,as.character(yvals[i] * -1), sep = " + ")         #xi-1 ^ 2 * an + xi-1 * bn + cn - f(xi-1)
+      terms2 <- paste(at2,bt2,ct2,as.character(yvals[i] * -1), sep = " + ")
       
       terms1 <- sub("[0-9].+ \\* a1 \\+ ","", terms1)
-      func1 <- paste(func1,terms1)
-      func2 <- paste(func2,terms2)
+      func1 <- paste(func1,terms1, sep = " ")
+      func2 <- paste(func2,terms2, sep = " ")
       
       functionStrings <- append(functionStrings,func1,length(functionStrings) - 2)
       functionStrings <- append(functionStrings,func2,length(functionStrings) - 2)
@@ -94,7 +98,7 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   } #Function creation for conditions 1 and 2
   
   for (i in 2:numintv){                                                             #Function creation for condition 3
-    func1 <- paste("function",funcFormABC,sep = "")
+    func1 <- paste("function",funcFormABC,sep = " ")
     tempabc1 <- abc
     tempabc2 <- abc
     for (j in 1:3){                                                            
@@ -104,14 +108,22 @@ QuadraticSplineInterpolation <- function(x,varVecs){
     
     at1 <- paste(as.character(xvals[i] * 2),tempabc1[1], sep = " * ")             
     at2 <- paste(as.character(xvals[i] * -2),tempabc2[1], sep = " * ")
-    bt1 <- paste(tempabc1[2], sep = " * ")                               
-    bt2 <- paste(paste("-",tempabc2[2], sep = ""), sep = " * ")
+    bt1 <- paste(1,tempabc1[2], sep = " * ")                               
+    bt2 <- paste("-1",tempabc2[2], sep = " * ")
+    print(bt1)
+    print(bt2)
     
     terms1 <- paste(at1,bt1,at2,bt2, sep = " + ")
     terms1 <- sub("[0-9]+ \\* a1 \\+ ","", terms1)
-    func1 <- paste(func1,terms1)
+    func1 <- paste(func1,terms1, sep = " ")
     functionStrings <- append(functionStrings,func1,length(functionStrings))
   }
+  
+  for (i in 1:(length(functionStrings))){ 
+    print(functionStrings[i])
+    #print(system[i])
+  }
+  print("******************************************")
   
   for (i in 1:(numunk - 1)){
     for (j in 1:(numunk - 1))
@@ -119,15 +131,13 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   }
   
   for (i in 1:(length(functionStrings))){ 
-    print(functionStrings[i])
+    #print(functionStrings[i])
     system[i] <- parse(text = functionStrings[i])
     #print(system[i])
   }
   
   acm <- AugCoeffMatrix(system)
-  print(acm)
-  solution <- GaussianMethod(xVars,acm)
-  print(solution)
+  solution <- GaussianMethod(xVars,acm$augcoeffmatrix)
 } #Quadratic Spline Interpolation
 
 x1 <- c(2,5,7)

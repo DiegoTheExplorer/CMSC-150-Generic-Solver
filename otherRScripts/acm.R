@@ -1,22 +1,29 @@
 AugCoeffMatrix <- function(sys){
-  
+
   #Check if list is empty
   if(length(sys) == 0){
     print("List of equations is empty")
     return(NA);
   }
-  
+
   deparsedSys <- lapply(sys,deparse,width.cutoff = 500)
   numEq <- length(deparsedSys)
   unknowns <- ""
 
+  if(length(deparsedSys[[1]]) < 2){
+    for (i in 1:numEq){
+      temp1 <- strsplit(deparsedSys[[i]], split = "\\) ")
+      temp1[[1]][1] <- paste(temp1[[1]][1],")")
+      deparsedSys[[i]] <- temp1
+      deparsedSys[[i]] <- unlist(deparsedSys[[i]])
+    }
+  }
+  
   #Separating the unknowns into their own list
   for (i in 1:numEq){
-    print(deparsedSys[[i]][[1]])
     currLen = nchar(deparsedSys[[i]][[1]])
     #check if number of unknowns is not even to the previous
     if(i > 1){
-      browser()
       if(unknownsLen != currLen){
         print("Number of unknowns was not equal")
         return(NA)
@@ -26,7 +33,12 @@ AugCoeffMatrix <- function(sys){
     
     #Store the list of unknowns
     if(i == 1){
-      justSymbols <- substring(deparsedSys[[i]][[1]], 11, unknownsLen - 2)
+      stop <- substr(deparsedSys[[i]][[1]],11,11)
+      if(stop == "x")
+        end <- 11
+      else
+        end <- 10
+      justSymbols <- substring(deparsedSys[[i]][[1]], end, unknownsLen - 2)
       justSymbols <- strsplit(justSymbols, ", ")
       unknowns <- justSymbols
     }
@@ -37,7 +49,7 @@ AugCoeffMatrix <- function(sys){
   RHS <- matrix(data=0, nrow=numEq, ncol = 1)
   colnames(RHS) <- c("RHS")
   numUnknowns <- length(unknowns[[1]])
-  
+
   #Creating the coefficient matrix
   tempMatrix <- matrix(c(0), nrow = numEq, ncol = numEq)
   for(i in 1:numEq){
@@ -47,12 +59,10 @@ AugCoeffMatrix <- function(sys){
       
     }
     temp <- strsplit(deparsedSys[[i]][[2]], " \\+ ")
+
     len <- length(temp[[1]])
-    #browser()
     for(j in 1:(length(temp[[1]]))){
       #Check if current the term is not a constant
-      print(temp[[1]][[j]])
-      print(grepl("\\*", temp[[1]][[j]]))
       if(grepl("\\*", temp[[1]][[j]])){
         temp[[1]][[j]] <- strsplit(temp[[1]][[j]], " \\* ")
         temp[[1]][[j]][[1]][[2]] <- substring(temp[[1]][[j]][[1]][[2]],2,2)
