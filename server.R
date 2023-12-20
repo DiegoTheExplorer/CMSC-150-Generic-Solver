@@ -79,6 +79,10 @@ server <- function(input, output) {
     
     foodInp <- input$foodChoices
     dietOutput <- SimplexDietSolver(foodInp)
+    output$objFunction <- renderText({
+      paste(foodInp["objective_function"])
+    }) #Estimate output
+    
   })
   #End of Simplex Diet Solver handling
   

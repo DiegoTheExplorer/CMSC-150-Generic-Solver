@@ -9,8 +9,21 @@ AugCoeffMatrix <- function(sys){
   deparsedSys <- lapply(sys,deparse,width.cutoff = 500)
   numEq <- length(deparsedSys)
   unknowns <- ""
-
-  if(length(deparsedSys[[1]]) < 2){
+  
+  #Combing the strings from going over the deparse max length
+  for (i in 1:numEq){
+    numStr <- length(deparsedSys[[i]])
+    for (j in 1:numStr){
+      deparsedSys[[i]][[j]] <- trimws(deparsedSys[[i]][[j]],which="both",)      #trim whitespace from each of the strings
+    }
+    unks <- deparsedSys[[i]][[1]]
+    deparsedSys[[i]] <- paste(deparsedSys[[i]][2:numStr],collapse=" ")          #collapse all strings after the formal parameters
+    deparsedSys[[i]] <- append(deparsedSys[[i]],unks,0)                         #insert the formal parameters as the first element
+    print(deparsedSys[[i]])
+  }
+  
+  #Separates the formal parameters from the body of the function
+  if(length(deparsedSys[[1]]) < 2){                                           
     for (i in 1:numEq){
       temp1 <- strsplit(deparsedSys[[i]], split = "\\) ")
       temp1[[1]][1] <- paste(temp1[[1]][1],")")
