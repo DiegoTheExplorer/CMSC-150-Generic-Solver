@@ -3,6 +3,7 @@
 
 source('otherRScripts/polyReg.R')
 source('otherRScripts/quadSpline.R')
+source('otherRScripts/diet.R')
 
 server <- function(input, output) {
   
@@ -75,5 +76,8 @@ server <- function(input, output) {
     
   }) #quadBtn Observer
   #End of Quadratic Spline Interpolation Handling
+  
+  #Start of Simplex Diet Solver handling
+  #End of Simplex Diet Solver handling
   
 } # server
