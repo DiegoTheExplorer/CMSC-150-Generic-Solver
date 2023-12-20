@@ -12,6 +12,9 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   numintv <- numdp - 1              #number of intervals
   numunk <- numintv * 3             #number of unknowns
   
+  if(x < xvals[1] || x > xvals[numdp])
+    return(FALSE)
+  
   funcFormABC <- ("(")              #function formal parameters that use an bn cn
   funcFormX <- ("(")                #function formal parameters that use x1, x2, x3,...,xn
   abcVars <- c()
@@ -167,8 +170,9 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   for (i in 1:numintv){
     temp <- paste(xvals[i],"< x <",xvals[i + 1])
     rangeLabels[i] <- temp
+    setNames(outputFuncStrings[[1]],rangeLabels[i])
   }
-  setNames(outputFuncStrings,rangeLabels)
+  outputFuncStrings <- unlist(outputFuncStrings)
   
   targetInt = 1
   for (i in 1:numintv){                                     
@@ -181,7 +185,7 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   }
 
   estimate <- genericQuadratic(x,finalCoeffs[[targetInt]][1],finalCoeffs[[targetInt]][2],finalCoeffs[[targetInt]][3])
-  returnList <- list(interpolating_functions = outputFuncStrings, estimate = estimate, xvals = xvals, yvals = yvals)
+  returnList <- list(interpolating_functions = outputFuncStrings, intervals = rangeLabels, estimate = estimate, input_x = xvals, input_y = yvals)
   
   return(returnList)
   

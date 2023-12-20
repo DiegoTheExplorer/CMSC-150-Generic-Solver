@@ -50,13 +50,28 @@ server <- function(input, output) {
     numDataPoints <- nrow(data)
     quadOutput <- QuadraticSplineInterpolation(input$quadX,c(data["V1"],data["V2"]))
     
-    output$console1 <- renderPrint({
-      print(quadOutput)
-    })
-    
-    output$quadEstimate <- renderText({
-      paste(as.character(quadOutput$estimate))
-    }) #Estimate output
+    if(typeof(quadOutput) == typeof(list())){
+      output$console1 <- renderPrint({
+        print(quadOutput)
+      })
+      
+      output$errorMsg2 <- renderText({
+        paste("")
+      })
+      
+      output$quadEstimate <- renderText({
+        paste(as.character(quadOutput$estimate))
+      }) #Estimate output
+    }else{
+      output$errorMsg2 <- renderText({
+        paste("The input value for x was not within the interval of the input data")
+      }) #Error message
+      output$console1 <- renderPrint({
+      })
+      output$quadEstimate <- renderText({
+        paste("")
+      }) #Estimate output
+    }
     
   }) #quadBtn Observer
   #End of Quadratic Spline Interpolation Handling
