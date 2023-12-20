@@ -20,7 +20,7 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              verbatimTextOutput("polyFunction"),      #Output for the Polynomial Regression Function
                              
                              h4("Estimated value of f(x):"),
-                             verbatimTextOutput("polyEstimate"),     #Output for the estimated value of x
+                             verbatimTextOutput("polyEstimate"),      #Output for the estimated value of x
                              verbatimTextOutput("errorMsg"),
                            ) # mainPanel
                            
@@ -44,7 +44,7 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              verbatimTextOutput("errorMsg2"),
                            ) # mainPanel
                   ), # Quadratic Spline Interpolation Tab Panel
-                  tabPanel("Simplex Diet Input Calculator",
+                  tabPanel("Simplex Diet Calculator Input",
                              mainPanel(
                                tags$h3("Food list"),
                                selectInput(
@@ -56,11 +56,12 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                  multiple = TRUE
                                ),
                                actionButton("dietBtn", "Optimize Diet"),
-                               h4("Objective Function:"),
+                               h4("Objective Function"),
+                               h6("Minimize:"),
                                verbatimTextOutput("objFunction"), 
                              ), # Main panel
                 ),# Diet Calculator Input Page
-                tabPanel("Diet Calculator Output",
+                tabPanel("Simplex Diet Calculator Output",
                          h1("Ouput"),
                 ), # Diet Calculator Output Page
                   

@@ -29,7 +29,6 @@ AugCoeffMatrix <- function(sys){
     unks <- deparsedSys[[i]][[1]]
     deparsedSys[[i]] <- paste(deparsedSys[[i]][2:numStr],collapse=" ")          #collapse all strings after the formal parameters
     deparsedSys[[i]] <- append(deparsedSys[[i]],unks,0)                         #insert the formal parameters as the first element
-    print(deparsedSys[[i]])
   }
   
   #Separating the unknowns into their own list
