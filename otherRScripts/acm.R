@@ -10,6 +10,16 @@ AugCoeffMatrix <- function(sys){
   numEq <- length(deparsedSys)
   unknowns <- ""
   
+  #Separates the formal parameters from the body of the function
+  if(length(deparsedSys[[1]]) < 2){
+    for (i in 1:numEq){
+      temp1 <- strsplit(deparsedSys[[i]], split = "\\) ")
+      temp1[[1]][1] <- paste(temp1[[1]][1],")")
+      deparsedSys[[i]] <- temp1
+      deparsedSys[[i]] <- unlist(deparsedSys[[i]])
+    }
+  }
+  
   #Combing the strings from going over the deparse max length
   for (i in 1:numEq){
     numStr <- length(deparsedSys[[i]])
@@ -20,16 +30,6 @@ AugCoeffMatrix <- function(sys){
     deparsedSys[[i]] <- paste(deparsedSys[[i]][2:numStr],collapse=" ")          #collapse all strings after the formal parameters
     deparsedSys[[i]] <- append(deparsedSys[[i]],unks,0)                         #insert the formal parameters as the first element
     print(deparsedSys[[i]])
-  }
-  
-  #Separates the formal parameters from the body of the function
-  if(length(deparsedSys[[1]]) < 2){                                           
-    for (i in 1:numEq){
-      temp1 <- strsplit(deparsedSys[[i]], split = "\\) ")
-      temp1[[1]][1] <- paste(temp1[[1]][1],")")
-      deparsedSys[[i]] <- temp1
-      deparsedSys[[i]] <- unlist(deparsedSys[[i]])
-    }
   }
   
   #Separating the unknowns into their own list
