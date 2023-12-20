@@ -78,6 +78,12 @@ server <- function(input, output) {
   #End of Quadratic Spline Interpolation Handling
   
   #Start of Simplex Diet Solver handling
+  observeEvent(input$dietBtn, {
+    req(input$foodChoices,cancelOutput = TRUE)    #Check if the user chose food
+    
+    foodInp <- input$foodChoices
+    dietOutput <- SimplexDietSolver(foodInp)
+  })
   #End of Simplex Diet Solver handling
   
 } # server

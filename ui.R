@@ -55,7 +55,7 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                  width = NULL,
                                  multiple = TRUE
                                ),
-                               actionButton("dietBtn", "Estimate x"),
+                               actionButton("dietBtn", "Optimize Diet"),
                              ), # food selection panel
                              mainPanel(
                                h1("Constraints"),
