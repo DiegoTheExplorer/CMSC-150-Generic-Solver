@@ -1,6 +1,3 @@
-source('otherRScripts/acm.R')
-source('otherRScripts/gaussianMethod.R')
-
 genericQuadratic <- function(x,a,b,c) a * x ^ 2 + b * x + c
 
 QuadraticSplineInterpolation <- function(x,varVecs){

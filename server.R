@@ -1,10 +1,6 @@
 #Author: Diego Miguel M. Villamil
 #Description: This is the back end part of the Rshiny app
 
-source('otherRScripts/polyReg.R')
-source('otherRScripts/quadSpline.R')
-source('otherRScripts/diet.R')
-
 server <- function(input, output) {
   
   #Start of Polynomial Regression handling

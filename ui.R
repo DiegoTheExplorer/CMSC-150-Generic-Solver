@@ -45,7 +45,7 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                            ) # mainPanel
                   ), # Quadratic Spline Interpolation Tab Panel
                   tabPanel("Simplex Diet Input Calculator",
-                             sidebarPanel(
+                             mainPanel(
                                tags$h3("Food list"),
                                selectInput(
                                  "foodChoices",
@@ -56,116 +56,12 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                                  multiple = TRUE
                                ),
                                actionButton("dietBtn", "Optimize Diet"),
-                             ), # food selection panel
-                             mainPanel(
-                               h1("Constraints"),
-                               h4("Set the nutritional value constraints here"),
-                               numericInput(                                    #Calories
-                                 "cons1",
-                                 "Calories",
-                                 2000,
-                                 min = 2000,
-                                 max = 2250,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Cholesterol
-                                 "cons2",
-                                 "Cholesterol",
-                                 0,
-                                 min = 0,
-                                 max = 300,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Total Fat
-                                 "cons3",
-                                 "Total Fat",
-                                 0,
-                                 min = 0,
-                                 max = 65,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Sodium
-                                 "cons4",
-                                 "Sodium",
-                                 0,
-                                 min = 0,
-                                 max = 2400,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Carbohydrates
-                                 "cons5",
-                                 "Carbohydrates",
-                                 0,
-                                 min = 0,
-                                 max = 300,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Dietary Fiber
-                                 "cons6",
-                                 "Dietary Fiber",
-                                 25,
-                                 min = 25,
-                                 max = 100,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Protein
-                                 "cons7",
-                                 "Protein",
-                                 50,
-                                 min = 50,
-                                 max = 100,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Vitamin A
-                                 "cons8",
-                                 "Vitamin A",
-                                 5000,
-                                 min = 5000,
-                                 max = 50000,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Vitamin C
-                                 "cons9",
-                                 "Vitamin C",
-                                 50,
-                                 min = 50,
-                                 max = 20000,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Calcium
-                                 "cons10",
-                                 "Calcium",
-                                 800,
-                                 min = 800,
-                                 max = 1600,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                               numericInput(                                    #Iron
-                                 "cons11",
-                                 "Iron",
-                                 10,
-                                 min = 10,
-                                 max = 30,
-                                 step = NA,
-                                 width = NULL
-                               ),
-                             ) # mainPanel
+                               h4("Objective Function:"),
+                               verbatimTextOutput("objFunction"), 
+                             ), # Main panel
                 ),# Diet Calculator Input Page
                 tabPanel("Diet Calculator Output",
                          h1("Ouput"),
-                         
-                         h4("Objective Function:"),
-                         verbatimTextOutput("objFunction"), 
                 ), # Diet Calculator Output Page
                   
               )
