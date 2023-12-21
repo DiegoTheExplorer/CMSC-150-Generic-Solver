@@ -158,7 +158,8 @@ QuadraticSplineInterpolation <- function(x,varVecs){
     temp <- funcStringTemplate                              #make string versions of the functions for each interval
     for (j in 1:3){
       subChar <- paste(" ",abc[j], sep = "")
-      temp <- sub(subChar,as.character(finalCoeffs[[i]][j]),temp)
+      replacement <- paste(" ", as.character(finalCoeffs[[i]][j]), sep = "")
+      temp <- sub(subChar,replacement,temp)
     }
     outputFuncStrings <- append(outputFuncStrings,temp)
   }
