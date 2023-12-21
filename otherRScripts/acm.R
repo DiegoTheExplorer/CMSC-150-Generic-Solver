@@ -1,11 +1,11 @@
 AugCoeffMatrix <- function(sys){
-
+  
   #Check if list is empty
   if(length(sys) == 0){
     print("List of equations is empty")
     return(NA);
   }
-
+  browser()
   deparsedSys <- lapply(sys,deparse,width.cutoff = 500)
   numEq <- length(deparsedSys)
   unknowns <- ""
@@ -30,7 +30,7 @@ AugCoeffMatrix <- function(sys){
     deparsedSys[[i]] <- paste(deparsedSys[[i]][2:numStr],collapse=" ")          #collapse all strings after the formal parameters
     deparsedSys[[i]] <- append(deparsedSys[[i]],unks,0)                         #insert the formal parameters as the first element
   }
-  
+  browser()
   #Separating the unknowns into their own list
   for (i in 1:numEq){
     currLen = nchar(deparsedSys[[i]][[1]])
@@ -81,8 +81,10 @@ AugCoeffMatrix <- function(sys){
         col = as.numeric(temp[[1]][[j]][[1]][[2]])
         val = as.numeric(temp[[1]][[j]][[1]][[1]])
         tempMatrix[i,col] = val
+        browser()
       }else{
         RHS[i][1] <- as.numeric(temp[[1]][[j]]) * -1
+        browser()
       }
     }
   }

@@ -52,18 +52,24 @@ SimplexDietSolver <- function(poods){
   
   
   objFuncString <- funcFormX                                   #creates a string of the objective function
+  minObjFuncString <- funcFormX
   for(i in 1:numpoods){
     if(i == 1){
       term <- paste(poodsInfo[i,12], xVars[i], sep = " * ")
       objFuncString <- paste(objFuncString, term, sep = " ")
+      term <- paste(-1 * poodsInfo[i,12], xVars[i], sep = " * ")
+      minObjFuncString <- paste(minObjFuncString, term, sep = " ")
     }else{
       term <- paste(poodsInfo[i,12], xVars[i], sep = " * ")
       objFuncString <- paste(objFuncString, term, sep = " + ")
+      term <- paste(-1 * poodsInfo[i,12], xVars[i], sep = " * ")
+      minObjFuncString <- paste(minObjFuncString, term, sep = " + ")
     }
   }
   objFuncString <- paste("function",objFuncString,sep = " ")
+  minObjFuncString <- paste("function",minObjFuncString,sep = " ")
   # End Objective Function Creation
-  
+
   
   #Start of Function Creation for Constraints
   
@@ -94,7 +100,8 @@ SimplexDietSolver <- function(poods){
   
   for (i in 1:numpoods){
     maxfuncString <- funcFormX
-    maxfuncString <- paste("function",maxfuncString, xVars[i], "+ -10", sep = " ")
+    term <- paste("1 *",xVars[i])
+    maxfuncString <- paste("function",maxfuncString, term, "+ -10")
     maxServCons[i] <- maxfuncString
   }
   print(maxServCons)
@@ -102,10 +109,12 @@ SimplexDietSolver <- function(poods){
   
   #Start of Simplex Solving
   
-  #Combine all the constraints into 1 vector
-  
-  #Call simplex
-  
+    #Combine all the constraints into 1 vector
+    sys <- list(maxNutConstraints,minNutConstraints,maxServCons,minObjFuncString)
+    sys <- unlist(sys)
+    print(sys)
+    #Call simplex
+    #solution <- SimplexMinimization(as.list(sys))
   #End of Simplex Solving
   retList <- list(objective_function = objFuncString)
   return(retList)
