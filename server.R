@@ -51,6 +51,9 @@ server <- function(input, output) {
     data <- read.csv(input$quadFile$datapath, header = FALSE)
     numDataPoints <- nrow(data)
     colnames(data) <- c("x","f(x)")
+    
+    data <- data[order(data$x, decreasing = FALSE),]
+    
     quadOutput <- QuadraticSplineInterpolation(input$quadX,c(data["x"],data["f(x)"]))
     
     if(typeof(quadOutput) == typeof(list())){
