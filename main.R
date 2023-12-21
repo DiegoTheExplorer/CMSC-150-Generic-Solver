@@ -2,7 +2,11 @@
 #Description: This file is the main app
 
 library(shiny)
-library(shinythemes)
+library(shinythemes)  #https://rstudio.github.io/shinythemes/
+                      #Used for the dark mode theme
+
+library(shinyWidgets) #https://dreamrs.github.io/shinyWidgets/reference/pickerInput.html#ref-examples
+                      #Used for the pickerInput widget
 
 source('otherRScripts/acm.R')
 source('otherRScripts/gaussianMethod.R')

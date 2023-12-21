@@ -22,6 +22,10 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              h4("Estimated value of f(x):"),
                              verbatimTextOutput("polyEstimate"),      #Output for the estimated value of x
                              verbatimTextOutput("errorMsg"),
+                             h4("Values of x and f(x) from input .csv:"),
+                             tableOutput("polyTable"),
+                             tags$head(tags$style("#polyTable .table {background-color:  #001e3a;}", media="screen", type="text/css")) 
+                             #https://stackoverflow.com/questions/21904188/r-shiny-how-to-change-background-color-of-a-table
                            ) # mainPanel
                            
                   ), # Polynomial Regression Tab Panel
@@ -42,23 +46,29 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              h4("Estimated value of f(x):"),
                              verbatimTextOutput("quadEstimate"),                #Output for the estimated value of x
                              verbatimTextOutput("errorMsg2"),
+                             tableOutput("quadTable"),
+                             tags$head(tags$style("#quadTable .table {background-color:  #001e3a;}", media="screen", type="text/css")) 
                            ) # mainPanel
                   ), # Quadratic Spline Interpolation Tab Panel
                   tabPanel("Simplex Diet Calculator Input",
                              mainPanel(
                                tags$h3("Food list"),
-                               selectInput(
+                               pickerInput(
                                  "foodChoices",
                                  "Select foods to be part of the diet: ",
                                  choices = nvt["Foods"][[1]],
                                  selected = NULL,
                                  width = NULL,
-                                 multiple = TRUE
+                                 multiple = TRUE,
+                                 options = list('actions-box' = TRUE),
                                ),
                                actionButton("dietBtn", "Optimize Diet"),
                                h4("Objective Function"),
                                h6("Minimize:"),
                                verbatimTextOutput("objFunction"), 
+                               h6("Selected foods:"),
+                               tableOutput("poodsTable"),
+                               tags$head(tags$style("#poodsTable .table {background-color:  #001e3a;}", media="screen", type="text/css")) 
                              ), # Main panel
                 ),# Diet Calculator Input Page
                 tabPanel("Simplex Diet Calculator Output",

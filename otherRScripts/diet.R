@@ -1,4 +1,4 @@
-nvt <- read.csv("csv/nutriVals.csv") #Nutritional Value Table
+nvt <- read.csv("csv/nutriVals.csv") #Nutritional Value 
 
 SimplexDietSolver <- function(poods){
   
@@ -98,13 +98,17 @@ SimplexDietSolver <- function(poods){
     minNutConstraints[i] <- paste("function",minfuncString,sep = " ")
   }
   
+  print("Maximization Constraints:")
+  print(maxNutConstraints)
+  print("Minimization Constraints:")
+  print(minNutConstraints)
+  
   for (i in 1:numpoods){
     maxfuncString <- funcFormX
     term <- paste("1 *",xVars[i])
     maxfuncString <- paste("function",maxfuncString, term, "+ -10")
     maxServCons[i] <- maxfuncString
   }
-  print(maxServCons)
   #End of Function Creation for constraints
   
   #Start of Simplex Solving

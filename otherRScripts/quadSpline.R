@@ -183,7 +183,9 @@ QuadraticSplineInterpolation <- function(x,varVecs){
   }
 
   estimate <- genericQuadratic(x,finalCoeffs[[targetInt]][1],finalCoeffs[[targetInt]][2],finalCoeffs[[targetInt]][3])
-  returnList <- list(interpolating_functions = outputFuncStrings, intervals = rangeLabels, estimate = estimate, input_x = xvals, input_y = yvals)
+  if(is.na(estimate)) 
+    estimate <- "No unique solution exists"
+  returnList <- list(interpolating_functions = outputFuncStrings, intervals = rangeLabels, estimate = estimate)
   
   return(returnList)
   
