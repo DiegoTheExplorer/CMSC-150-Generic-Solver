@@ -10,7 +10,7 @@ server <- function(input, output) {
     
     data <- read.csv(input$polyFile$datapath, header = FALSE)
     colnames(data) <- c("x","f(x)")
-    print(data)
+    data <- data[order(data$x, decreasing = FALSE),]
     numDataPoints <- nrow(data)
     if(input$polyOrder >= numDataPoints){     #Check if the input polynomial order is equal to or less than the number of data points
       output$errorMsg <- renderText({
