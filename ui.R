@@ -4,6 +4,30 @@
 ui <- fluidPage(theme = shinytheme("superhero"),
                 navbarPage(
                   "CMSC 150 Generic Solver",
+                  tabPanel("Simplex Diet Calculator Input",
+                           mainPanel(
+                             tags$h3("Food list"),
+                             pickerInput(
+                               "foodChoices",
+                               "Select foods to be part of the diet: ",
+                               choices = nvt["Foods"][[1]],
+                               selected = NULL,
+                               width = NULL,
+                               multiple = TRUE,
+                               options = list('actions-box' = TRUE,'liveSearch' = TRUE,'liveSearchNormalize' = TRUE),
+                             ),
+                             actionButton("dietBtn", "Optimize Diet"),
+                             h4("Objective Function"),
+                             h6("Minimize:"),
+                             verbatimTextOutput("objFunction"), 
+                             h6("Selected foods:"),
+                             tableOutput("poodsTable"),
+                             tags$head(tags$style("#poodsTable .table {background-color:  #001e3a;}", media="screen", type="text/css")) 
+                           ), # Main panel
+                  ),# Diet Calculator Input Page
+                  tabPanel("Simplex Diet Calculator Output",
+                           h1("Ouput"),
+                  ), # Diet Calculator Output Page
                   tabPanel("Polynomial Regression",
                            sidebarPanel(
                              tags$h3("Input:"),
@@ -50,31 +74,6 @@ ui <- fluidPage(theme = shinytheme("superhero"),
                              tags$head(tags$style("#quadTable .table {background-color:  #001e3a;}", media="screen", type="text/css")) 
                            ) # mainPanel
                   ), # Quadratic Spline Interpolation Tab Panel
-                  tabPanel("Simplex Diet Calculator Input",
-                             mainPanel(
-                               tags$h3("Food list"),
-                               pickerInput(
-                                 "foodChoices",
-                                 "Select foods to be part of the diet: ",
-                                 choices = nvt["Foods"][[1]],
-                                 selected = NULL,
-                                 width = NULL,
-                                 multiple = TRUE,
-                                 options = list('actions-box' = TRUE),
-                               ),
-                               actionButton("dietBtn", "Optimize Diet"),
-                               h4("Objective Function"),
-                               h6("Minimize:"),
-                               verbatimTextOutput("objFunction"), 
-                               h6("Selected foods:"),
-                               tableOutput("poodsTable"),
-                               tags$head(tags$style("#poodsTable .table {background-color:  #001e3a;}", media="screen", type="text/css")) 
-                             ), # Main panel
-                ),# Diet Calculator Input Page
-                tabPanel("Simplex Diet Calculator Output",
-                         h1("Ouput"),
-                ), # Diet Calculator Output Page
-                  
               )
 
 ) # fluidPage     

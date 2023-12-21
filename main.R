@@ -17,3 +17,4 @@ source('otherRScripts/diet.R')
 
 appDir <- getwd()
 shinyAppDir(appDir, options = list())
+
